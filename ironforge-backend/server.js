@@ -34,10 +34,30 @@ app.get('/api/workouts', async (req,res)=>{
 
 app.post('/api/workouts', async (req,res) =>{
     const { exercise, weight, reps, sets } = req.body;
+    
+    // Input validation
+    if (!exercise || typeof exercise !== 'string' || exercise.trim() === '') {
+        return res.status(400).json({ error: "Exercise name is required and must be a valid text." });
+    }
+    
+    const parsedWeight = parseInt(weight, 10);
+    const parsedReps = parseInt(reps, 10);
+    const parsedSets = parseInt(sets, 10);
+
+    if (isNaN(parsedWeight) || parsedWeight < 0) {
+        return res.status(400).json({ error: "Weight must be a non-negative number." });
+    }
+    if (isNaN(parsedReps) || parsedReps <= 0) {
+        return res.status(400).json({ error: "Reps must be a positive number." });
+    }
+    if (isNaN(parsedSets) || parsedSets <= 0) {
+        return res.status(400).json({ error: "Sets must be a positive number." });
+    }
+
     try {
         const result = await pool.query(
             'INSERT INTO workouts (exercise, weight, reps, sets) VALUES ($1, $2, $3, $4) RETURNING *',
-            [exercise, weight, reps, sets || 1]
+            [exercise.trim(), parsedWeight, parsedReps, parsedSets]
         );
         res.json( {message: "Workout added successfully!", workout: result.rows[0]} );
     } catch (err) {

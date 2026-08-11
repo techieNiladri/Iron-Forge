@@ -1,9 +1,13 @@
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    : 'https://ironforge-backend.onrender.com'; // Placeholder, replace with actual backend domain if deployed
+
 const workoutList = document.getElementById('workout-list');
 
 // Function to fetch workouts from our backend engine
 async function fetchWorkouts() {
     try {
-        const response = await fetch('http://localhost:3000/api/workouts');
+        const response = await fetch(`${API_BASE_URL}/api/workouts`);
         if (!response.ok) throw new Error("Failed to fetch workouts.");
         const workouts = await response.json();
 
@@ -11,8 +15,25 @@ async function fetchWorkouts() {
 
         workouts.forEach(workout => {
             const li = document.createElement('li');
+            
+            // Format date nicely
+            let dateStr = '';
+            if (workout.created_at) {
+                const date = new Date(workout.created_at);
+                dateStr = date.toLocaleDateString(undefined, { 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+
             li.innerHTML = `
-                <span><strong>${workout.exercise}</strong> - ${workout.weight} lbs x ${workout.reps} reps x ${workout.sets} sets</span>
+                <div class="workout-info">
+                    <span class="workout-title"><strong>${workout.exercise}</strong></span>
+                    <span class="workout-details">${workout.weight} lbs x ${workout.reps} reps x ${workout.sets} sets</span>
+                    ${dateStr ? `<span class="workout-date">${dateStr}</span>` : ''}
+                </div>
                 <button class="delete-btn" onclick="deleteWorkout(${workout.id})">X</button>
             `;
             workoutList.appendChild(li);
@@ -44,14 +65,19 @@ addBtn.addEventListener("click", async () => {
         sets: sets
     };
     try {
-        const response = await fetch('http://localhost:3000/api/workouts', {
+        const response = await fetch(`${API_BASE_URL}/api/workouts`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(newWorkout)
         });
-        if (!response.ok) throw new Error("Failed to add workout.");
+        
+        if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.error || "Failed to add workout.");
+        }
+
         document.getElementById('exercise').value = '';
         document.getElementById('weight').value = '';
         document.getElementById('reps').value = '';
@@ -59,14 +85,15 @@ addBtn.addEventListener("click", async () => {
         fetchWorkouts(); // Refresh the workout list
     } catch (error) {
         console.error("Error adding workout:", error);
-        alert("Failed to add workout. Please check if the server is running.");
+        alert(error.message);
     }
 });
+
 // Function to delete a workout
 async function deleteWorkout(id) {
     try {
         // Send the DELETE request to the backend with the specific ID
-        const response = await fetch(`http://localhost:3000/api/workouts/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/workouts/${id}`, {
             method: 'DELETE'
         });
         if (!response.ok) throw new Error("Failed to delete workout.");

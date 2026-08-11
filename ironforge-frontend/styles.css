@@ -91,6 +91,40 @@ li {
     justify-content: space-between;
     align-items: center;
     border-left: 4px solid var(--accent);
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.workout-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.workout-title {
+    font-size: 1.1rem;
+    color: var(--text-main);
+}
+
+.workout-details {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.workout-date {
+    color: var(--accent);
+    font-size: 0.75rem;
+    opacity: 0.8;
 }
 
 .delete-btn {
