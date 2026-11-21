@@ -1,0 +1,12 @@
+import { build } from 'esbuild';
+import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const output=path.join(root,'public');
+const result=await build({absWorkingDir:root,entryPoints:['ironforge-frontend/app.js'],bundle:true,minify:true,format:'esm',platform:'browser',target:'es2020',outfile:path.join(output,'app.js'),write:false,legalComments:'none'});
+await mkdir(output,{recursive:true});
+await cp(path.join(root,'ironforge-frontend/styles.css'),path.join(output,'styles.css'));
+await writeFile(path.join(output,'index.html'),await readFile(path.join(root,'ironforge-frontend/index.html'),'utf8'));
+await writeFile(path.join(output,'app.js'),result.outputFiles[0].contents);
+console.log('Built Iron Forge public assets. No credentials were embedded.');

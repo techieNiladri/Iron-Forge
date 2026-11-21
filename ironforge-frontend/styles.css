@@ -139,3 +139,26 @@ li {
     background: #f87171;
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
 }
+/* Accessible account and form controls; existing tracker palette retained. */
+* { box-sizing: border-box; }
+.hidden { display: none !important; }
+label { display: flex; flex-direction: column; gap: 6px; flex: 1 1 40%; font-size: .9rem; color: var(--text-muted); min-width: 0; }
+input { width: 100%; min-width: 0; font-size: 16px; min-height: 44px; }
+button { min-height: 44px; }
+button:disabled { opacity: .65; cursor: wait; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+#auth-panel { display: block; }
+#auth-panel h2 { margin-top: 0; }
+#auth-form { display: grid; gap: 14px; }
+.auth-actions, .account-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.account-row { justify-content: space-between; margin-bottom: 12px; }
+.account-row p { overflow-wrap: anywhere; min-width: 0; }
+.text-button { background: transparent; color: var(--accent); flex: none; padding: 8px 4px; text-decoration: underline; }
+.text-button:hover { background: transparent; box-shadow: none; }
+.auth-actions { margin-top: 10px; }
+#auth-message, #workout-message, #app-message { overflow-wrap: anywhere; }
+.workout-info { min-width: 0; }
+.workout-title { overflow-wrap: anywhere; }
+.delete-btn { flex-shrink: 0; margin-left: 10px; min-width: 44px; }
+@media(max-width: 480px) { body { padding: 1rem; } .glass-panel { padding: 1rem; } label { flex-basis: 44%; } label:first-child { flex-basis: 100%; } }
+@media(prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

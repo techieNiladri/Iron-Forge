@@ -11,17 +11,38 @@
         <header>
             <h1>IronForge <span class = "accent">Tracker</span></h1>
         </header>
-        <div class="input-section glass-panel">
-            <input type="text" id="exercise" placeholder="Exercise(e.g. Deadlift)">
-            <input type="text" id="weight" placeholder="Weight(lbs)">
-            <input type="number" id="reps" placeholder="Reps">
-            <input type="number" id="sets" placeholder="Sets">
-            <button id="add-btn">Add Set</button>
-        </div>
-        <ul id="workout-list">
-
-        </ul>
+        <p id="app-message" role="status" aria-live="polite">Loading Iron Forge…</p>
+        <section id="auth-panel" class="glass-panel hidden" aria-labelledby="auth-title">
+            <h2 id="auth-title">Sign in</h2>
+            <p id="auth-description">Your workouts are private to your account.</p>
+            <form id="auth-form">
+                <label id="email-field">Email<input type="email" id="auth-email" autocomplete="email" required></label>
+                <label id="password-field">Password<input type="password" id="auth-password" autocomplete="current-password" minlength="8" required></label>
+                <label id="confirm-field" class="hidden">Confirm new password<input type="password" id="confirm-password" autocomplete="new-password" minlength="8"></label>
+                <p id="auth-message" role="status" aria-live="polite"></p>
+                <button id="auth-submit" type="submit">Sign in</button>
+            </form>
+            <div class="auth-actions">
+                <button id="auth-toggle" type="button" class="text-button">Create an account</button>
+                <button id="forgot-password" type="button" class="text-button">Forgot password?</button>
+                <button id="back-to-signin" type="button" class="text-button hidden">Back to sign in</button>
+            </div>
+        </section>
+        <section id="tracker" class="hidden" aria-label="Your workouts">
+            <div class="account-row"><p id="account-label"></p><button id="sign-out" type="button" class="text-button">Sign out</button></div>
+            <form id="workout-form" class="input-section glass-panel">
+                <label>Exercise<input type="text" id="exercise" placeholder="e.g. Deadlift" maxlength="120" required></label>
+                <label>Weight (lbs)<input type="number" id="weight" min="0" max="10000" step="0.01" inputmode="decimal" required></label>
+                <label>Reps<input type="number" id="reps" min="1" max="1000" step="1" inputmode="numeric" required></label>
+                <label>Sets<input type="number" id="sets" min="1" max="1000" step="1" inputmode="numeric" required></label>
+                <button id="add-btn" type="submit">Add Set</button>
+            </form>
+            <p id="workout-message" role="status" aria-live="polite"></p>
+            <button id="retry-load" type="button" class="text-button hidden">Retry loading workouts</button>
+            <ul id="workout-list" aria-label="Saved workouts"></ul>
+            <button id="load-more" type="button" class="text-button hidden">Load older workouts</button>
+        </section>
     </div>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
